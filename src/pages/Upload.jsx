@@ -4,75 +4,75 @@ import { postAsset } from "../lib/post";
 import Modal from "../components/Modal";
 
 function Upload() {
+  // Global profile variable
   const { profile } = useContext(GlobalContext);
-
+  // temp storage for asset information
   const [files, setFiles] = useState(null);
   const [title, setTitle] = useState("");
   const [topics, setTopics] = useState("");
   const [art, setArt] = useState();
-
+  // temp variables for error handling and ui
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState("");
-
+  // array of dummy art for music
   const artTemp = [
     "https://arweave.net/claOMpHwq99nMhO5tf5f3p5lq5VAtWX-tGeXmDvICRM",
     "https://arweave.net/Uui8HyMuB4UbV3OynrBmDvkTmMV4WzPBS9zO_PaSBlA",
     "https://arweave.net/RWVEaZeLZXoloM6AQmrvpTrk3u8MCx364IhT-UUddu8",
   ];
-
-  const notValid = !(files && title !== "");
-
-  const dropBeat = async (e) => {
-    e.preventDefault();
-    const asset = {
-      file: files[0],
-      title,
-      topics,
-      artWork: art,
-      username: profile.name, // check this line, `profile` might need to be stored in a state variable
-      userid: profile.contract_id,
-    };
-
-    try {
-      console.log("Deploying...");
-      setLoading("Deploying...");
-      setIsOpen(true);
-      const result = await postAsset(asset);
-      e.target.reset();
-      setFiles(null);
-      setTitle("");
-      setTopics("");
-      setLoading("Deployed successfully...");
-      console.log("this is the upload result", result);
-      // setIsOpen(false);
-      console.log("Deploying successfully...");
-    } catch (e) {
-      setLoading("Error deploying...", e.message);
-      console.log("Error deploying...", e.message);
-    }
-  };
-
-  const handleFileChange = (e) => {
-    setFiles(e.target.files);
-  };
-
   // Pick a random image from the array when the component mounts
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * artTemp.length);
     setArt(artTemp[randomIndex]);
   }, []);
-
-  console.log("Title", title);
+  // handles the file loading
+  const handleFileChange = (e) => {
+    setFiles(e.target.files);
+  };
+  // checks if file and title have been defined
+  const notValid = !(files && title !== "");
+  // function call to the post function
+  const dropBeat = async (e) => {
+    e.preventDefault();
+    // defining asset object
+    const asset = {
+      file: files[0],
+      title,
+      topics,
+      artWork: art,
+      username: profile.name,
+      userid: profile.contract_id,
+    };
+    //  try catch conditional for error handling
+    try {
+      setLoading("Deploying...");
+      setIsOpen(true);
+      // post function call
+      const result = await postAsset(asset);
+      // input data reset
+      e.target.reset();
+      setFiles(null);
+      setTitle("");
+      setTopics("");
+      setLoading("Deployed successfully!");
+      console.log("this is the upload result", result);
+    } catch (e) {
+      setLoading("Error deploying...", e.message);
+    }
+  };
 
   return (
     <div className="h-screen w-screen bg-white">
+      {/* Pop up to display state of our upload call */}
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} text={loading} />
+      {/* form linked to the dropbeat function */}
       <form
         className="h-screen flex flex-col justify-center items-center"
         onSubmit={dropBeat}
       >
         <div className="flex flex-col justify-center bg-red mt-20">
           <div>
+            {/* displays preview of audio file and music art */}
             {files && files[0] ? (
               <div className="flex flex-col items-center">
                 <img
@@ -90,6 +90,7 @@ function Upload() {
                 </div>
               </div>
             ) : (
+              // Input for audio file
               <div className="form-control">
                 <label htmlFor="file" className="label">
                   Audio Track
@@ -105,6 +106,7 @@ function Upload() {
               </div>
             )}
           </div>
+          {/* Inputs for title and hashtags */}
           <div>
             <div className="form-control">
               <label htmlFor="title" className="label">
@@ -131,6 +133,7 @@ function Upload() {
                 etc)
               </p>
             </div>
+            {/* Submit button */}
             <div className="mt-4 space-y-4">
               <button disabled={notValid} className="btn btn-block">
                 Create Post
@@ -139,10 +142,6 @@ function Upload() {
           </div>
         </div>
       </form>
-      {/* Upload
-      <audio controls>
-        <source src="" type="audio/mp3" />{" "}
-      </audio> */}
     </div>
   );
 }

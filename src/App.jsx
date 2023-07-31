@@ -11,10 +11,14 @@ import View from "./pages/View";
 import { GlobalContext } from "./context";
 import { useContext, useEffect, useState } from "react";
 
+// function to redirect users upon log in and log out
 const ProfileRedirect = () => {
+  // Global setProfile function
   const { profile } = useContext(GlobalContext);
+  // react hook for page navigation
   const navigate = useNavigate();
 
+  // useEffect checks for profile and routes to either the View or Home page
   useEffect(() => {
     if (profile) {
       navigate("/view");
@@ -27,6 +31,7 @@ const ProfileRedirect = () => {
 };
 
 function App() {
+  // Global profile variable and setProfile function
   const [profile, setProfile] = useState();
 
   return (
@@ -40,6 +45,7 @@ function App() {
         >
           <ProfileRedirect />
           <Navbar />
+          {/* routing between pages */}
           <Routes>
             <Route path="/" exact element={<Home />} />
             <Route path="/upload" element={<Upload />} />

@@ -6,23 +6,27 @@ import { GlobalContext } from "../context";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  // Global profile variable and setProfile function
   const { profile, setProfile } = useContext(GlobalContext);
+  // Log in function
   async function handleConnect() {
     const temp = await Othent.logIn({
       apiId: import.meta.env.VITE_OTHENT_API_ID,
     });
     setProfile(temp);
   }
-
+  // Log out function
   async function handleDisconnect() {
     await Othent.logOut({
       apiId: import.meta.env.VITE_OTHENT_API_ID,
     });
     setProfile(null);
   }
+
   return (
     <div className="navbar bg-black drop-shadow-md h-14 fixed top-0 fixed top-0 z-50">
       <div className="navbar-start">
+        {/* Hamburger dropdown to toggle between various pages of the app */}
         <div className="dropdown dropdown-hover">
           <button className="btn btn-square btn-ghost">
             <svg
@@ -49,6 +53,7 @@ const Navbar = () => {
           </ul>
         </div>
       </div>
+      {/* Title of the app linking to the Home page */}
       <div className="navbar-center md:flex">
         <Link
           to="/"
@@ -57,6 +62,7 @@ const Navbar = () => {
           BeatDrop
         </Link>
       </div>
+      {/* A Log in button or the connected user details and a button to Log out */}
       <div className="navbar-end md:flex gap-4">
         {profile ? (
           <div className="flex justify-evenly items-center gap-2">

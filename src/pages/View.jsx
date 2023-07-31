@@ -4,60 +4,69 @@ import { take } from "ramda";
 import Like from "../components/Like";
 
 function View() {
+  // temp storage to store information received from queryAssets
   const [assets, setAssets] = useState(null);
-
+  // useEffect fetches the latest assets each tme our page reloads
   useEffect(() => {
     getAssetData().then((assets) => {
       setAssets(assets);
     });
   }, []);
-
+  // Placehoder text till the assets are fetched
   if (!assets) {
     return (
-      <section className="hero min-h-screen bg-black flex flex-col mt-10">
-        <p>Tunes may take sometime to load...</p>
-        <hr className="w-1/2 mt-2" />
-      </section>
+      <div className="h-screen w-screen bg-white">
+        <p>Beats may take sometime to load...</p>
+      </div>
     );
   }
 
   return (
-    <section className="hero min-h-screen bg-black flex flex-col mt-10">
-      <p>Tunes may take sometime to load...</p>
-      <hr className="w-1/2 mt-2" />
+    <section className="h-screen w-screen bg-white">
       {assets.length > 0 ? (
-        <div className="flex-col">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 my-16 mx-20 justify-center">
           {assets.map((asset, key) => (
+            // renders a card for each asset
             <div
               key={key}
-              className="hero-content my-5 flex-col md:space-x-4 border-solid border-2 border-slate-300 rounded-lg"
+              className="h-96 p-5 my-5 flex flex-col items-center justify-center bg-stone-950 drop-shadow-lg rounded-2xl p-3"
             >
-              <div className="w-7/8 px-0 mx-0 grid place-items-center">
+              {/* music artwork */}
+              <img
+                className="h-40 mx-auto mb-5 rounded-md"
+                src={asset.artWork}
+                alt="music art"
+              />
+              {/* audio content with controls, the ui depends on browsers */}
+              <div>
                 {asset.type === "audio" && (
-                  <audio
-                    className="w-[350px] object-contain rounded-lg"
-                    src={asset.audio}
-                    alt={asset.title}
-                  >
+                  <audio controls src={asset.audio} alt={asset.title}>
                     Your browser does not support the
                     <code>audio</code> element.
                   </audio>
                 )}
               </div>
-              <div className="w-[350px] flex flex-row items-center justify-between">
-                <div className="w-7/8 mx-0">
-                  <div className="flex justify-between">
-                    <p className="text-md">
+              {/* Music title, creator, hashtags */}
+              <div className="flex flex-row items-center justify-between px-6 mt-2 w-full">
+                <div>
+                  <div className="flex flex-col justify-between">
+                    <p className="text-sm">
+                      <strong className="text-lg text-white">
+                        {asset.title}
+                      </strong>
+                    </p>
+                    <p className="text-sm">
+                      Artist:{" "}
                       {asset.ownername ? asset.ownername : take(5, asset.owner)}
-                      <strong className="text-lg">{asset.title}</strong>
                     </p>
                   </div>
                   {asset.topics.length > 0 && (
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm">
                       Hashtags: {asset.topics.join(", ")}
                     </p>
                   )}
                 </div>
+                {/* Component to like the asset/ music */}
                 <Like id={asset.id} />
               </div>
             </div>

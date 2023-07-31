@@ -18,9 +18,6 @@ const toArrayBuffer = (file) =>
     });
   });
 
-// intiating new warp instance for mainnet
-const warp = WarpFactory.forMainnet().use(new DeployPlugin());
-
 // function to post asset to network using othent as authentication
 // takes in 'asset' information
 export async function postAsset(asset) {
@@ -73,8 +70,8 @@ export async function postAsset(asset) {
     useBundlr: true,
   });
 
-  // 9HQe0OG35xzD8KqB419vLDE8AnTfzk5EZJ2HP_3SyE8
-  // Rcgox3-R3HGYaNH8Dpkm-pZCajUzreXksXqrGo7by2o
+  // intiating new warp instance for mainnet
+  const warp = WarpFactory.forMainnet().use(new DeployPlugin());
 
   // registering transaction with warp
   const { contractTxId } = await warp.register(
